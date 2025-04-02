@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
 using TMPro;
@@ -115,14 +116,18 @@ public class ScoreManager : MonoBehaviour
 
         scores.Sort((a, b) => b.Item2.CompareTo(a.Item2));
 
-        string leaderboardTextContent = "🏆 Leaderboard 🏆\n";
-        foreach (var (user, score) in scores)
+        string leaderboardTextContent = "Leaderboard\n";
+        var topScores = scores.OrderByDescending(spair => spair.Item2).Take(5).ToList();
+
+        for (int i = 0; i < topScores.Count; i++)
         {
+            var user = topScores[i].Item1;
+            var score = topScores[i].Item2;
             leaderboardTextContent += $"{user}: {score} pts\n";
         }
-
         leaderboardText.text = leaderboardTextContent;
     }
+
 
     private IEnumerator UpdateHighScore(string username, int newScore)
     {
